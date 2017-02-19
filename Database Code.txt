@@ -1,0 +1,18 @@
+CREATE TABLE login(
+username nvarchar(32) NOT NULL,
+password nvarchar(512) NOT NULL,
+user_ID int AUTO_INCREMENT,
+Email nvarchar(64) NOT NULL UNIQUE,
+PRIMARY KEY(user_ID)
+);
+
+CREATE TABLE schedule(
+S_PK int AUTO_INCREMENT,
+user_ID int NOT NULL,
+pill_name nvarchar(128) NOT NULL,
+position int NOT NULL,
+time time NOT NULL,
+DOW ENUM('1','2','3','4','5','6','7'),
+PRIMARY KEY(S_PK),
+Foreign Key(user_ID) REFERENCES login(user_ID)
+);
