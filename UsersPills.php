@@ -21,7 +21,7 @@
 	$Sec = $_GET['sec'];
 	$Day = $_GET['day'];
 	$ct = "".$Hour.":".$Min.":".$Sec."";
-	$sql = "Select position, pill_name, time from schedule where schedule.user_ID = (Select user_ID from login where username = '".$Username."') and schedule.DOW = Convert('".$Day."', UNSIGNED INTEGER)-1 and schedule.time > Convert('".$ct."', TIME) ORDER BY time ASC;";
+	$sql = "Select position, pill_name, time from schedule where schedule.user_ID = (Select user_ID from login where username = '".$Username."') and schedule.DOW = '$Day' and schedule.time > Convert('".$ct."', TIME) ORDER BY time ASC;";
 	if ($result = mysqli_query($con, $sql))
 	{
 		// If so, then create a results array and a temporary one
