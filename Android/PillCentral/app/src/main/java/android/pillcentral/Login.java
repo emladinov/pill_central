@@ -23,8 +23,7 @@ import java.util.Map;
 
 import app.AppConfig;
 import app.AppController;
-import helper.SQLiteHandler;
-import helper.SessionManager;
+
 
 
 public class Login extends AppCompatActivity {
@@ -33,8 +32,7 @@ public class Login extends AppCompatActivity {
     private EditText inputpassword;
     private Button btnLogin;
     private ProgressDialog pDialog;
-    private SessionManager session;
-    private SQLiteHandler db;
+
 
 
 
@@ -53,17 +51,10 @@ public class Login extends AppCompatActivity {
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
-        //SQLite Database
-        db = new SQLiteHandler((getApplicationContext()));
 
-        //Session Manager
-        session = new SessionManager(getApplicationContext());
 
-        if (session.isLoggedIn()) {
-            Intent intent = new Intent(Login.this, pilldisplay.class);
-            startActivity(intent);
-            finish();
-        }
+
+
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -107,20 +98,12 @@ public class Login extends AppCompatActivity {
                     //checks error node in json
                     if(!error)
                     {
-                        //successful login
-                        session.setLogin(true);
 
-                        //store user in SQLite
-                        JSONObject user = jObj.getJSONObject("user");
-                        String uname = user.getString("name");
-                        String pass = user.getString("password");
-                        String email = user.getString("email");
-
-                        db.addUser(uname, pass,email);
 
                         //Launch pilldisplay
                         Intent intent = new Intent(Login.this, pilldisplay.class);
                         startActivity(intent);
+                        error=true;
                         finish();
                     }else
                     {
@@ -145,7 +128,7 @@ public class Login extends AppCompatActivity {
             }
     }){
         @Override
-            protected Map<String, String> getParams()
+        protected Map<String, String> getParams()
         {
             //Posting paramters to login URL
             Map<String, String> params = new HashMap<String, String>();
