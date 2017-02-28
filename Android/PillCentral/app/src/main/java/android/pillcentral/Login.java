@@ -101,9 +101,10 @@ public class Login extends AppCompatActivity {
 
 
                         //Launch pilldisplay
-                        Intent intent = new Intent(Login.this, pilldisplay.class);
+                        Intent intent = new Intent(Login.this, singlepilldisplay.class);
+                        intent.putExtra("username", username);
+                        intent.putExtra("password", password);
                         startActivity(intent);
-                        error=true;
                         finish();
                     }else
                     {

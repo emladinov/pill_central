@@ -10,4 +10,7 @@ public class AppConfig {
 
     // Server user register url
     public static String URL_REGISTER = "http://turing.manhattan.edu/~nwilk01/register.php";
+
+    // Server user active pill url
+    public static String URL_PILLDISPLAY = "http://turing.manhattan.edu/~nwilk01/pilldisplay.php";
 }
