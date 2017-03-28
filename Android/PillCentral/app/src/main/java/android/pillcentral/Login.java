@@ -98,10 +98,8 @@ public class Login extends AppCompatActivity {
                     //checks error node in json
                     if(!error)
                     {
-
-
                         //Launch pilldisplay
-                        Intent intent = new Intent(Login.this, singlepilldisplay.class);
+                        Intent intent = new Intent(Login.this, pilldisplay.class);
                         intent.putExtra("username", username);
                         intent.putExtra("password", password);
                         startActivity(intent);
