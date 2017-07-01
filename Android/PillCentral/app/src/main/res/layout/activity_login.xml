@@ -10,43 +10,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="android.pillcentral.Login">
 
-    <TextView
-        android:text="Password:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/editText"
-        android:layout_alignStart="@+id/editText"
-        android:id="@+id/textView2"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-    <TextView
-        android:text="Username:"
-        android:layout_width="wrap_content"
-        android:id="@+id/textView"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
     <Button
         android:text="Log In"
         android:layout_below="@+id/editText2"
         android:layout_alignParentStart="true"
-        android:id="@+id/button"
+        android:id="@+id/logn"
         android:layout_height="75dp"
         android:layout_width="125dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:onClick="onclick" />
-
-    <EditText
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/editText2"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentStart="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+        android:onClick="onclick"
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="300dp"
@@ -58,4 +31,45 @@
         android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <EditText
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/editText2"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+
+
+    <TextView
+        android:text="Username:"
+        android:layout_width="wrap_content"
+        android:id="@+id/textView"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="New User"
+        android:layout_height="75dp"
+        android:id="@+id/newUsr"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:layout_width="125dp"
+        android:onClick="onclick"
+        android:layout_below="@+id/logn"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Password:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:layout_below="@+id/editText"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

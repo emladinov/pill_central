@@ -31,6 +31,7 @@ public class Login extends AppCompatActivity {
     private EditText inputusername;
     private EditText inputpassword;
     private Button btnLogin;
+    private Button btnNewUsr;
     private ProgressDialog pDialog;
 
 
@@ -45,7 +46,8 @@ public class Login extends AppCompatActivity {
         //register button and input boxes
         inputusername = (EditText) findViewById(R.id.editText);
         inputpassword = (EditText) findViewById(R.id.editText2);
-        btnLogin = (Button) findViewById(R.id.button);
+        btnLogin = (Button) findViewById(R.id.logn);
+        btnNewUsr = (Button) findViewById(R.id.newUsr);
 
         //Progress Dialog
         pDialog = new ProgressDialog(this);
@@ -53,7 +55,13 @@ public class Login extends AppCompatActivity {
 
 
 
-
+        btnNewUsr.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(Login.this, newUser.class);
+                startActivity(intent);
+            }
+        });
 
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -63,12 +71,12 @@ public class Login extends AppCompatActivity {
 
                 if (!username.isEmpty() && !password.isEmpty()) {
                     checkLogin(username, password);
-                } else if (username.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please enter username", Toast.LENGTH_LONG).show();
+                } else if (username.isEmpty() && password.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Please enter username & password", Toast.LENGTH_LONG).show();
                 } else if (password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Please enter password", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please enter username & password", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Please enter username", Toast.LENGTH_LONG).show() ;
                 }
             }
 
@@ -101,7 +109,6 @@ public class Login extends AppCompatActivity {
                         //Launch pilldisplay
                         Intent intent = new Intent(Login.this, pilldisplay.class);
                         intent.putExtra("username", username);
-                        intent.putExtra("password", password);
                         startActivity(intent);
                         finish();
                     }else
