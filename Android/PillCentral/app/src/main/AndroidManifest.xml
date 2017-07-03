@@ -27,7 +27,8 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".newUser" />
-        <activity android:name=".addpill"></activity>
+        <activity android:name=".addpill" />
+        <activity android:name=".weeklydisplay"></activity>
     </application>
 
 </manifest>

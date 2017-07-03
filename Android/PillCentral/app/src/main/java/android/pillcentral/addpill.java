@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,17 +58,26 @@ public class addpill extends AppCompatActivity {
         setContentView(R.layout.activity_addpill);
 
         dow = (SeekBar) findViewById(R.id.seekBar);
-        dowtxt = (TextView) findViewById(R.id.dayofweek);
-        pillname = (EditText) findViewById(R.id.pilltxt);
         settime = (Button) findViewById(R.id.settime);
         submit = (Button) findViewById(R.id.Submit);
         dosage = (EditText) findViewById(R.id.dosage);
+        pillname = (EditText) findViewById(R.id.pilltxt);
         location = (EditText) findViewById(R.id.loc);
         timeset = (TextView) findViewById(R.id.timeset);
         ampm = (TextView) findViewById(R.id.AMPM);
+        dowtxt = (TextView) findViewById(R.id.dayofweek);
 
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
+
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        if (hour>12)
+        {
+            ampm.setText("PM");
+            hour = hour-12;
+        }
+        timeset.setText(singletodouble(hour) + ":" + singletodouble(cal.get(Calendar.MINUTE)));
 
         settime.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
@@ -160,6 +172,27 @@ public class addpill extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.cancel, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_cancel:
+                Intent intent = new Intent(addpill.this, pilldisplay.class);
+                intent.putExtra("username", getIntent().getStringExtra("username"));
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public String singletodouble(int single)

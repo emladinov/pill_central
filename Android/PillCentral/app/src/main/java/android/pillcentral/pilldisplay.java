@@ -98,6 +98,8 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.returnback, menu);
+        inflater.inflate(R.menu.weekly, menu);
         inflater.inflate(R.menu.addpill, menu);
         return true;
     }
@@ -111,6 +113,14 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
                 intent.putExtra("username", getIntent().getStringExtra("username"));
                 startActivity(intent);
                 return true;
+            case R.id.action_week:
+                Intent intent2 = new Intent(pilldisplay.this, weeklydisplay.class);
+                intent2.putExtra("username", getIntent().getStringExtra("username"));
+                startActivity(intent2);
+                return true;
+            case R.id.action_goback:
+                Intent intent3 = new Intent(pilldisplay.this, Login.class);
+                startActivity(intent3);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -161,9 +171,9 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
                         //create a new HashMap
                         map = new HashMap<String, String >();
 
-                        map.put("pill_name", pillname);
-                        map.put("position", position);
-                        map.put("time", time);
+                        map.put("pill_name", "Pill: " + pillname);
+                        map.put("position", "Pill Box #: " + position);
+                        map.put("time", "Take at: " + time);
 
                         pillList.add(map);
                     }
