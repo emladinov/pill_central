@@ -5,5 +5,5 @@
         android:id="@+id/action_week"
         android:icon="@android:drawable/ic_menu_today"
         android:title="Weekly Schedule"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 </menu>

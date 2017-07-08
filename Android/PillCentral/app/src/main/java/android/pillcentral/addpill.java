@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -40,9 +42,7 @@ import app.AppConfig;
 import app.AppController;
 
 public class addpill extends AppCompatActivity {
-    private static final String TAG = Login.class.getSimpleName();
-    private SeekBar dow;
-    private TextView dowtxt;
+    private static final String TAG = addpill.class.getSimpleName();
     private TextView timeset;
     private TextView ampm;
     private EditText pillname;
@@ -50,6 +50,13 @@ public class addpill extends AppCompatActivity {
     private EditText location;
     private Button settime;
     private Button submit;
+    private CheckBox SUN;
+    private CheckBox MON;
+    private CheckBox TUES;
+    private CheckBox WED;
+    private CheckBox THUR;
+    private CheckBox FRI;
+    private CheckBox SAT;
     private ProgressDialog pDialog;
 
     @Override
@@ -57,7 +64,6 @@ public class addpill extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addpill);
 
-        dow = (SeekBar) findViewById(R.id.seekBar);
         settime = (Button) findViewById(R.id.settime);
         submit = (Button) findViewById(R.id.Submit);
         dosage = (EditText) findViewById(R.id.dosage);
@@ -65,14 +71,23 @@ public class addpill extends AppCompatActivity {
         location = (EditText) findViewById(R.id.loc);
         timeset = (TextView) findViewById(R.id.timeset);
         ampm = (TextView) findViewById(R.id.AMPM);
-        dowtxt = (TextView) findViewById(R.id.dayofweek);
+        SUN = (CheckBox) findViewById(R.id.sun);
+        MON = (CheckBox) findViewById(R.id.mon);
+        TUES = (CheckBox) findViewById(R.id.tues);
+        WED = (CheckBox) findViewById(R.id.wed);
+        THUR = (CheckBox) findViewById(R.id.thurs);
+        FRI = (CheckBox) findViewById(R.id.fri);
+        SAT = (CheckBox) findViewById(R.id.sat);
 
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
-        if (hour>12)
+        if(hour ==12){
+            ampm.setText("PM");
+        }
+        else if (hour>11)
         {
             ampm.setText("PM");
             hour = hour-12;
@@ -86,47 +101,14 @@ public class addpill extends AppCompatActivity {
             }
         });
 
-        dow.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                switch (progress){
-                    case 0: dowtxt.setText("Monday");
-                        break;
-                    case 1: dowtxt.setText("Tuesday");
-                        break;
-                    case 2: dowtxt.setText("Wednesday");
-                        break;
-                    case 3: dowtxt.setText("Thursday");
-                        break;
-                    case 4: dowtxt.setText("Friday");
-                        break;
-                    case 5: dowtxt.setText("Saturday");
-                        break;
-                    case 6: dowtxt.setText("Sunday");
-                        break;
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String pill = pillname.getText().toString();
                 String dos = dosage.getText().toString();
                 String local = location.getText().toString();
                 String time = timeset.getText().toString();
-                String DOW = dowtxt.getText().toString();
                 String AMPM = ampm.getText().toString();
-                int h, d = 0;
+                int h;
                 String[] ttime = null;
                 if (pill.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Please enter a pill name", Toast.LENGTH_LONG).show();
@@ -144,31 +126,34 @@ public class addpill extends AppCompatActivity {
                         ttime[0] = singletodouble(h);
                     }
 
-                    switch (DOW) {
-                        case "Monday":
-                            d = 1;
-                            break;
-                        case "Tuesday":
-                            d = 2;
-                            break;
-                        case "Wednesday":
-                            d = 3;
-                            break;
-                        case "Thursday":
-                            d = 4;
-                            break;
-                        case "Friday":
-                            d = 5;
-                            break;
-                        case "Saturday":
-                            d = 6;
-                            break;
-                        case "Sunday":
-                            d = 0;
-                            break;
+                    if(!SUN.isChecked() && !MON.isChecked() && !TUES.isChecked() && !WED.isChecked() && !THUR.isChecked() && !FRI.isChecked() && !SAT.isChecked())
+                    {
+                        Toast.makeText(getApplicationContext(), "Please choose at least 1 day of the week", Toast.LENGTH_LONG).show();
                     }
 
-                    pillsubmit(getIntent().getStringExtra("username"), pill + " " + dos + "mg", String.valueOf(d), ttime[0], ttime[1], "00", local);
+                    if(SUN.isChecked())
+                    {
+                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "0", ttime[0], ttime[1], "00", local);
+                    }
+                    if(MON.isChecked())
+                    {
+                        pillsubmit(getIntent().getStringExtra("username"), pill ,  dos ,"1", ttime[0], ttime[1], "00", local);
+                    }
+                    if(TUES.isChecked()) {
+                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "2", ttime[0], ttime[1], "00", local);
+                    }
+                    if(WED.isChecked()) {
+                        pillsubmit(getIntent().getStringExtra("username"), pill ,  dos , "3", ttime[0], ttime[1], "00", local);
+                    }
+                    if(THUR.isChecked()) {
+                        pillsubmit(getIntent().getStringExtra("username"), pill ,  dos , "4", ttime[0], ttime[1], "00", local);
+                    }
+                    if(FRI.isChecked()) {
+                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "5", ttime[0], ttime[1], "00", local);
+                    }
+                    if(SAT.isChecked()) {
+                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "6", ttime[0], ttime[1], "00", local);
+                    }
                 }
             }
         });
@@ -212,7 +197,8 @@ public class addpill extends AppCompatActivity {
         }
         return String.valueOf(single);
     }
-    private void pillsubmit(final String username, final String pill, final String d, final String hour, final String minute, final String second, final String local )
+
+    private void pillsubmit(final String username, final String pill,final String dosage, final String d, final String hour, final String minute, final String second, final String local )
     {
         final String tag_string_req = "req_registration";
 
@@ -264,6 +250,7 @@ public class addpill extends AppCompatActivity {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("username", username);
                 params.put("pillname", pill);
+                params.put("dosage", dosage);
                 params.put("DOW", d);
                 params.put("location", local);
                 params.put("hour", hour);

@@ -28,7 +28,11 @@
 
         <activity android:name=".newUser" />
         <activity android:name=".addpill" />
-        <activity android:name=".weeklydisplay"></activity>
+        <activity android:name=".weeklydisplay" />
+        <activity android:name=".profileconfig" />
+        <activity android:name=".pillinfo" />
+        <activity android:name=".homescreen" />
+        <activity android:name=".distinctpills"></activity>
     </application>
 
 </manifest>

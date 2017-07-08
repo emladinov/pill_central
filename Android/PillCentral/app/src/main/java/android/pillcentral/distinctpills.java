@@ -1,53 +1,27 @@
 package android.pillcentral;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
-//import android.icu.util.Calendar;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import app.AppConfig;
-import app.AppController;
 
-
-public class pilldisplay extends AppCompatActivity { //ListActivity
+public class distinctpills extends AppCompatActivity {
     private ProgressDialog pDialog;
     ArrayList<HashMap<String, String>> pillList;
     HashMap<String, String> map;
@@ -58,28 +32,19 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pilldisplay);
-
-        pillList = new ArrayList<HashMap<String, String>>();
-
-        lv=(ListView) findViewById(R.id.list);
+        setContentView(R.layout.activity_distinctpills);
 
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
-        final String username = getIntent().getStringExtra("username");
-        Calendar cal = Calendar.getInstance();
-        String hour = singletodouble(cal.get(Calendar.HOUR_OF_DAY));
-        String minute = singletodouble(cal.get(Calendar.MINUTE));
-        String sec = singletodouble(cal.get(Calendar.SECOND));
-        int day = cal.get(Calendar.DAY_OF_WEEK)-1;
-        String DOW = day + "";
+        lv=(ListView) findViewById(R.id.ilist);
+        pillList = new ArrayList<HashMap<String, String>>();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HashMap<String,String> item =(HashMap<String,String>) (lv.getItemAtPosition(position));
-                Intent intent = new Intent(pilldisplay.this, pillinfo.class);
+                Intent intent = new Intent(distinctpills.this, pillinfo.class);
                 String pillname = item.get("pill_name");
                 String dos = item.get("dosage");
                 String time = item.get("time");
@@ -88,61 +53,12 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
                 intent.putExtra("dos", dos);
                 intent.putExtra("time", time);
                 intent.putExtra("box", boxnum);
-                intent.putExtra("username", username);
+                intent.putExtra("username", getIntent().getStringExtra("username"));
                 startActivity(intent);
             }
         });
 
-        new LoadAllPills().execute(username,hour, minute, sec ,DOW);
-    }
-
-    public String singletodouble(int single)
-    {
-        switch(single){
-            case 0: return "00";
-            case 1: return "01";
-            case 2: return "02";
-            case 3: return "03";
-            case 4: return "04";
-            case 5: return "05";
-            case 6: return "06";
-            case 7: return "07";
-            case 8: return "08";
-            case 9: return "09";
-            default: break;
-        }
-        return String.valueOf(single);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.returnback, menu);
-        inflater.inflate(R.menu.weekly, menu);
-        inflater.inflate(R.menu.addpill, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_add:
-                Intent intent = new Intent(pilldisplay.this, addpill.class);
-                intent.putExtra("username", getIntent().getStringExtra("username"));
-                startActivity(intent);
-                return true;
-            case R.id.action_week:
-                Intent intent2 = new Intent(pilldisplay.this, weeklydisplay.class);
-                intent2.putExtra("username", getIntent().getStringExtra("username"));
-                startActivity(intent2);
-                return true;
-            case R.id.action_goback:
-                Intent intent3 = new Intent(pilldisplay.this, Login.class);
-                startActivity(intent3);
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        new LoadAllPills().execute(getIntent().getStringExtra("username"));
     }
 
     class LoadAllPills extends AsyncTask<String, String, String> {
@@ -150,25 +66,21 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(pilldisplay.this);
+            pDialog = new ProgressDialog(distinctpills.this);
             pDialog.setMessage("Loading pills. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
-            pDialog.show();
+            //pDialog.show();
         }
 
         protected String doInBackground(String... args) {
 
             HashMap<String,String > params = new HashMap<>();
             params.put("username",args[0]);
-            params.put("hour", args[1]);
-            params.put("min", args[2]);
-            params.put("sec", args[3]);
-            params.put("DOW",args[4]);
 
             Log.d("request", "starting");
             // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(AppConfig.URL_PILLDISPLAY , "POST", params);
+            JSONObject json = jParser.makeHttpRequest(AppConfig.URL_DISTINCT, "POST", params);
 
             Log.d("All Products: ", json.toString());
 
@@ -229,7 +141,7 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
                 public void run() {
 
                     ListAdapter adapter = new SimpleAdapter(
-                            pilldisplay.this, pillList,
+                            distinctpills.this, pillList,
                             R.layout.singlepill, new String[]{
                             "pill_name", "dosage","position", "time"},
                             new int[]{ R.id.pillname, R.id.dosage, R.id.local, R.id.taketime});

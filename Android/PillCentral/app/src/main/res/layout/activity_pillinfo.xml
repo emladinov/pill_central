@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pillinfo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="android.pillcentral.pillinfo">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView12"
+        android:layout_marginTop="24dp"
+        android:id="@+id/pillname" />
+
+    <TextView
+        android:text="Pill Name:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView12"
+        android:layout_alignBaseline="@+id/pillname"
+        android:layout_alignBottom="@+id/pillname"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Dosage:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView14"
+        android:layout_alignBaseline="@+id/dosage"
+        android:layout_alignBottom="@+id/dosage"
+        android:layout_toStartOf="@+id/dosage" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/dosage"
+        android:layout_below="@+id/pillname"
+        android:layout_alignStart="@+id/pillname"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:text="Take Time:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView15"
+        android:layout_alignBaseline="@+id/timechange"
+        android:layout_alignBottom="@+id/timechange"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="T"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tues"
+        android:layout_marginEnd="11dp"
+        android:layout_alignBaseline="@+id/wed"
+        android:layout_alignBottom="@+id/wed"
+        android:layout_toStartOf="@+id/wed" />
+
+    <CheckBox
+        android:text="M"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mon"
+        android:layout_alignBaseline="@+id/tues"
+        android:layout_alignBottom="@+id/tues"
+        android:layout_toStartOf="@+id/tues"
+        android:layout_marginEnd="11dp" />
+
+    <CheckBox
+        android:text="S"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sat"
+        android:layout_alignBaseline="@+id/fri"
+        android:layout_alignBottom="@+id/fri"
+        android:layout_toEndOf="@+id/fri" />
+
+    <CheckBox
+        android:text="S"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sun"
+        android:layout_alignBaseline="@+id/mon"
+        android:layout_alignBottom="@+id/mon"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:text="W"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/wed"
+        android:layout_marginBottom="77dp"
+        android:layout_alignBottom="@+id/apply"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Apply Changes"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/apply"
+        android:layout_marginBottom="87dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Box Num:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView20"
+        android:layout_alignBaseline="@+id/boxnum"
+        android:layout_alignBottom="@+id/boxnum"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/boxnum"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/dosage"
+        android:textAlignment="viewEnd"
+        android:layout_width="30dp" />
+
+    <CheckBox
+        android:text="F"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fri"
+        android:layout_alignBaseline="@+id/thurs"
+        android:layout_alignBottom="@+id/thurs"
+        android:layout_toEndOf="@+id/thurs"
+        android:layout_marginStart="10dp" />
+
+    <Button
+        android:text="Change"
+        android:id="@+id/timechange"
+        android:textSize="12sp"
+        android:layout_width="75dp"
+        android:layout_height="35dp"
+        android:layout_alignBottom="@+id/ampm"
+        android:layout_alignEnd="@+id/sat" />
+
+    <CheckBox
+        android:text="T"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/thurs"
+        android:layout_alignBaseline="@+id/wed"
+        android:layout_alignBottom="@+id/wed"
+        android:layout_toEndOf="@+id/wed"
+        android:layout_marginStart="11dp" />
+
+    <TextView
+        android:text="AM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ampm"
+        android:textSize="30sp"
+        android:layout_alignBaseline="@+id/ctime"
+        android:layout_alignBottom="@+id/ctime"
+        android:layout_toEndOf="@+id/wed" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:id="@+id/ctime"
+        android:text="12:12"
+        android:textSize="30sp"
+        android:layout_width="80dp"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/dosage"
+        android:layout_toEndOf="@+id/mon" />
+
+    <Button
+        android:text="Delete"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/deletion"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:layout_below="@+id/wed"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>

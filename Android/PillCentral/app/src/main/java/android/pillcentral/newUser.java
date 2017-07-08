@@ -29,7 +29,7 @@ import app.AppConfig;
 import app.AppController;
 
 public class newUser extends AppCompatActivity {
-    private static final String TAG = Login.class.getSimpleName();
+    private static final String TAG = newUser.class.getSimpleName();
     private Button sbmt;
     private EditText usrnm;
     private EditText psswrd;
@@ -134,7 +134,8 @@ public class newUser extends AppCompatActivity {
                     if(!error)
                     {
                         //Launch pilldisplay
-                        Intent intent = new Intent(newUser.this, Login.class);
+                        Intent intent = new Intent(newUser.this, profileconfig.class);
+                        intent.putExtra("username", username);
                         startActivity(intent);
                         finish();
                     }else

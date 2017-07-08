@@ -16,4 +16,19 @@ public class AppConfig {
 
     // Server new pill url
     public static String URL_NEWPILL = "http://turing.manhattan.edu/~nwilk01/Android/newpill.php";
+
+    // Server user info url
+    public static String URL_USERINFO = "http://turing.manhattan.edu/~nwilk01/Android/userinfo.php";
+
+    // Server pill info url
+    public static String URL_PILLINFO = "http://turing.manhattan.edu/~nwilk01/Android/pillDOW.php";
+
+    // Server delete pill url
+    public static String URL_DELETE = "http://turing.manhattan.edu/~nwilk01/Android/pilldelete.php";
+
+    // Server week pills url
+    public static String URL_WEEK = "http://turing.manhattan.edu/~nwilk01/Android/weekdisplay.php";
+
+    // Server week pills url
+    public static String URL_DISTINCT = "http://turing.manhattan.edu/~nwilk01/Android/distinctpill.php";
 }
