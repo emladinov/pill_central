@@ -3,13 +3,17 @@ package android.pillcentral;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 
 import org.json.JSONArray;
@@ -21,7 +25,8 @@ import java.util.HashMap;
 
 import app.AppConfig;
 
-public class distinctpills extends AppCompatActivity {
+public class distinctpills extends Fragment {
+
     private ProgressDialog pDialog;
     ArrayList<HashMap<String, String>> pillList;
     HashMap<String, String> map;
@@ -30,21 +35,20 @@ public class distinctpills extends AppCompatActivity {
     private ListView lv;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_distinctpills);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        RelativeLayout rootview = (RelativeLayout) inflater.inflate(R.layout.distinctpills, container, false);
 
-        pDialog = new ProgressDialog(this);
+        pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
 
-        lv=(ListView) findViewById(R.id.ilist);
+        lv=(ListView) rootview.findViewById(R.id.ilist);
         pillList = new ArrayList<HashMap<String, String>>();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HashMap<String,String> item =(HashMap<String,String>) (lv.getItemAtPosition(position));
-                Intent intent = new Intent(distinctpills.this, pillinfo.class);
+                Intent intent = new Intent(getActivity(), pillinfo.class);
                 String pillname = item.get("pill_name");
                 String dos = item.get("dosage");
                 String time = item.get("time");
@@ -53,12 +57,14 @@ public class distinctpills extends AppCompatActivity {
                 intent.putExtra("dos", dos);
                 intent.putExtra("time", time);
                 intent.putExtra("box", boxnum);
-                intent.putExtra("username", getIntent().getStringExtra("username"));
+                intent.putExtra("username", getArguments().getString("username"));
                 startActivity(intent);
             }
         });
 
-        new LoadAllPills().execute(getIntent().getStringExtra("username"));
+        new LoadAllPills().execute(getArguments().getString("username"));
+
+        return rootview;
     }
 
     class LoadAllPills extends AsyncTask<String, String, String> {
@@ -66,7 +72,7 @@ public class distinctpills extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(distinctpills.this);
+            pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Loading pills. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -137,11 +143,11 @@ public class distinctpills extends AppCompatActivity {
             // dismiss the dialog after getting all products
             pDialog.dismiss();
             // updating UI from Background Thread
-            runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 public void run() {
 
                     ListAdapter adapter = new SimpleAdapter(
-                            distinctpills.this, pillList,
+                            getActivity(), pillList,
                             R.layout.singlepill, new String[]{
                             "pill_name", "dosage","position", "time"},
                             new int[]{ R.id.pillname, R.id.dosage, R.id.local, R.id.taketime});

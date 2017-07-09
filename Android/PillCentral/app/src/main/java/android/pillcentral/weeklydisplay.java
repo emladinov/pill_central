@@ -3,19 +3,23 @@ package android.pillcentral;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.RadioButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -29,7 +33,7 @@ import java.util.HashMap;
 
 import app.AppConfig;
 
-public class weeklydisplay extends AppCompatActivity {
+public class weeklydisplay extends Fragment {
     private RadioGroup weekgroup;
     private ProgressDialog pDialog;
     ArrayList<HashMap<String, String>> pillList;
@@ -46,23 +50,27 @@ public class weeklydisplay extends AppCompatActivity {
     private RadioButton SAT;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weeklydisplay);
-        weekgroup = (RadioGroup) findViewById(R.id.week_bar);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        RelativeLayout rootview = (RelativeLayout) inflater.inflate(R.layout.weeklydisplay, container, false);
+
+        weekgroup = (RadioGroup) rootview.findViewById(R.id.week_bar);
         pillList = new ArrayList<HashMap<String, String>>();
-        lv=(ListView) findViewById(R.id.weeklv);
-        SUN = (RadioButton) findViewById(R.id.SUN);
-        MON = (RadioButton) findViewById(R.id.MON);
-        TUES = (RadioButton) findViewById(R.id.TUES);
-        WED = (RadioButton) findViewById(R.id.WED);
-        THUR = (RadioButton) findViewById(R.id.THURS);
-        FRI = (RadioButton) findViewById(R.id.FRI);
-        SAT = (RadioButton) findViewById(R.id.SAT);
+        lv=(ListView) rootview.findViewById(R.id.weeklv);
+        SUN = (RadioButton) rootview.findViewById(R.id.SUN);
+        MON = (RadioButton) rootview.findViewById(R.id.MON);
+        TUES = (RadioButton) rootview.findViewById(R.id.TUES);
+        WED = (RadioButton) rootview.findViewById(R.id.WED);
+        THUR = (RadioButton) rootview.findViewById(R.id.THURS);
+        FRI = (RadioButton) rootview.findViewById(R.id.FRI);
+        SAT = (RadioButton) rootview.findViewById(R.id.SAT);
 
         Calendar cal = Calendar.getInstance();
         int day = cal.get(Calendar.DAY_OF_WEEK)-1;
-        new LoadAllPills().execute( getIntent().getStringExtra("username"),String.valueOf(day));
+
+        String user = getArguments().getString("username");
+        final String username = user;
+
+        new LoadAllPills().execute(user,String.valueOf(day));
 
         switch (day) {
             case 0:
@@ -81,8 +89,7 @@ public class weeklydisplay extends AppCompatActivity {
                 THUR.setChecked(true);
                 break;
             case 5:
-                //FRI.setChecked(true);
-                FRI.toggle();
+                FRI.setChecked(true);
                 break;
             case 6:
                 SAT.setChecked(true);
@@ -91,7 +98,7 @@ public class weeklydisplay extends AppCompatActivity {
 
 
 
-        pDialog = new ProgressDialog(this);
+        pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
 
         weekgroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -100,31 +107,31 @@ public class weeklydisplay extends AppCompatActivity {
                 switch (checkedId) {
                     case R.id.SUN:
                         pillList.clear();
-                        new LoadAllPills().execute( getIntent().getStringExtra("username"),"0");
+                        new LoadAllPills().execute(getArguments().getString("username"),"0");
                         break;
                     case R.id.MON:
                         pillList.clear();
-                        new LoadAllPills().execute( getIntent().getStringExtra("username"),"1");
+                        new LoadAllPills().execute( getArguments().getString("username"),"1");
                         break;
                     case R.id.TUES:
                         pillList.clear();
-                        new LoadAllPills().execute( getIntent().getStringExtra("username"),"2");
+                        new LoadAllPills().execute( getArguments().getString("username"),"2");
                         break;
                     case R.id.WED:
                         pillList.clear();
-                        new LoadAllPills().execute( getIntent().getStringExtra("username"),"3");
+                        new LoadAllPills().execute( getArguments().getString("username"),"3");
                         break;
                     case R.id.THURS:
                         pillList.clear();
-                        new LoadAllPills().execute( getIntent().getStringExtra("username"),"4");
+                        new LoadAllPills().execute( getArguments().getString("username"),"4");
                         break;
                     case R.id.FRI:
                         pillList.clear();
-                        new LoadAllPills().execute( getIntent().getStringExtra("username"),"5");
+                        new LoadAllPills().execute( getArguments().getString("username"),"5");
                         break;
                     case R.id.SAT:
                         pillList.clear();
-                        new LoadAllPills().execute(getIntent().getStringExtra("username"),"6");
+                        new LoadAllPills().execute(getArguments().getString("username"),"6");
                         break;
                 }
             }
@@ -134,7 +141,7 @@ public class weeklydisplay extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 HashMap<String,String> item =(HashMap<String,String>) (lv.getItemAtPosition(position));
-                Intent intent = new Intent(weeklydisplay.this, pillinfo.class);
+                Intent intent = new Intent(getActivity(), pillinfo.class);
                 String pillname = item.get("pill_name");
                 String dos = item.get("dosage");
                 String time = item.get("time");
@@ -143,41 +150,12 @@ public class weeklydisplay extends AppCompatActivity {
                 intent.putExtra("dos", dos);
                 intent.putExtra("time", time);
                 intent.putExtra("box", boxnum);
-                intent.putExtra("username", getIntent().getStringExtra("username"));
+                intent.putExtra("username", getArguments().getString("username"));
                 startActivity(intent);
             }
         });
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.returnback, menu);
-        inflater.inflate(R.menu.daily, menu);
-        inflater.inflate(R.menu.addpill, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_daily:
-                Intent intent2 = new Intent(weeklydisplay.this, pilldisplay.class);
-                intent2.putExtra("username", getIntent().getStringExtra("username"));
-                startActivity(intent2);
-                return true;
-            case R.id.action_add:
-                Intent intent = new Intent(weeklydisplay.this, addpill.class);
-                intent.putExtra("username", getIntent().getStringExtra("username"));
-                startActivity(intent);
-                return true;
-            case R.id.action_goback:
-                Intent intent3 = new Intent(weeklydisplay.this, homescreen.class);
-                startActivity(intent3);
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return rootview;
     }
 
     class LoadAllPills extends AsyncTask<String, String, String> {
@@ -185,7 +163,7 @@ public class weeklydisplay extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(weeklydisplay.this);
+            pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Loading pills. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
@@ -257,11 +235,11 @@ public class weeklydisplay extends AppCompatActivity {
             // dismiss the dialog after getting all products
             pDialog.dismiss();
             // updating UI from Background Thread
-            runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 public void run() {
 
                     ListAdapter adapter = new SimpleAdapter(
-                            weeklydisplay.this, pillList,
+                            getActivity(), pillList,
                             R.layout.singlepill, new String[]{
                             "pill_name", "dosage","position", "time"},
                             new int[]{ R.id.pillname, R.id.dosage, R.id.local, R.id.taketime});
@@ -271,3 +249,4 @@ public class weeklydisplay extends AppCompatActivity {
         }
     }
 }
+

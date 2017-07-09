@@ -58,7 +58,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         }
         if(minute == 0)
         {
-                min = "00";
+            min = "00";
         }
         else
         {
@@ -95,3 +95,4 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         return String.valueOf(single);
     }
 }
+

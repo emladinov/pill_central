@@ -120,7 +120,7 @@ public class profileconfig extends AppCompatActivity {
                 }
 
                 if(phonenum.getText().toString().length()!=10){
-                   Toast.makeText(getApplicationContext(), "Invalid phone number", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Invalid phone number", Toast.LENGTH_LONG).show();
                 }
 
                 if(male.isChecked()) {
@@ -222,7 +222,7 @@ public class profileconfig extends AppCompatActivity {
                     //checks error node in json
                     if(!error)
                     {
-                        Intent intent = new Intent(profileconfig.this, pilldisplay.class);
+                        Intent intent = new Intent(profileconfig.this, Tabs.class);
                         intent.putExtra("username", getIntent().getStringExtra("username"));
                         startActivity(intent);
                         finish();
@@ -277,3 +277,4 @@ public class profileconfig extends AppCompatActivity {
             pDialog.dismiss();
     }
 }
+

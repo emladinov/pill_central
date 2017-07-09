@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="Hello Nathan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
+        android:id="@+id/uname"
+        android:textSize="40sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Location:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView22"
+        android:layout_alignEnd="@+id/textView22"
+        android:id="@+id/textView23"
+        android:textSize="20sp" />
+
+    <TextView
+        android:text="Dosage:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView22"
+        android:textSize="20sp"
+        android:layout_below="@+id/textView17"
+        android:layout_alignEnd="@+id/textView17" />
+
+    <TextView
+        android:text="Next Pill:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:id="@+id/textView17"
+        android:textSize="20sp"
+        android:layout_below="@+id/uname"
+        android:layout_alignStart="@+id/uname" />
+
+    <TextView
+        android:text="Take at:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView19"
+        android:textSize="20sp"
+        android:layout_below="@+id/textView23"
+        android:layout_alignEnd="@+id/textView23" />
+
+    <TextView
+        android:text="00:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ttime"
+        android:textSize="20sp"
+        android:layout_alignBaseline="@+id/textView19"
+        android:layout_alignBottom="@+id/textView19"
+        android:layout_alignStart="@+id/pname" />
+
+    <TextView
+        android:text="Test Pill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pname"
+        android:textSize="20sp"
+        android:layout_alignBaseline="@+id/textView17"
+        android:layout_alignBottom="@+id/textView17"
+        android:layout_toEndOf="@+id/textView22"
+        android:layout_marginStart="37dp" />
+
+    <TextView
+        android:text="50 mg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView23"
+        android:layout_alignStart="@+id/pname"
+        android:id="@+id/dosage"
+        android:textSize="20sp" />
+
+    <TextView
+        android:text="Box 5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ttime"
+        android:layout_alignStart="@+id/ttime"
+        android:id="@+id/local"
+        android:textSize="20sp" />
+
+</RelativeLayout>

@@ -31,4 +31,8 @@ public class AppConfig {
 
     // Server week pills url
     public static String URL_DISTINCT = "http://turing.manhattan.edu/~nwilk01/Android/distinctpill.php";
+
+    // Server name url
+    public static String URL_UNAME = "http://turing.manhattan.edu/~nwilk01/Android/username.php";
 }
+

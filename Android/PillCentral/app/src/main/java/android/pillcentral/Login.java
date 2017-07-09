@@ -58,7 +58,7 @@ public class Login extends AppCompatActivity {
         btnNewUsr.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view)
             {
-                Intent intent = new Intent(Login.this, homescreen.class);
+                Intent intent = new Intent(Login.this, newUser.class);
                 startActivity(intent);
             }
         });
@@ -107,7 +107,7 @@ public class Login extends AppCompatActivity {
                     if(!error)
                     {
                         //Launch pilldisplay
-                        Intent intent = new Intent(Login.this, pilldisplay.class);
+                        Intent intent = new Intent(Login.this, Tabs.class);
                         intent.putExtra("username", username);
                         startActivity(intent);
                         finish();
@@ -132,17 +132,17 @@ public class Login extends AppCompatActivity {
                         error.getMessage(), Toast.LENGTH_LONG).show();
                 hideDialog();
             }
-    }){
-        @Override
-        protected Map<String, String> getParams()
-        {
-            //Posting paramters to login URL
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("username", username);
-            params.put("password", password);
+        }){
+            @Override
+            protected Map<String, String> getParams()
+            {
+                //Posting paramters to login URL
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                params.put("password", password);
 
-            return params;
-        }
+                return params;
+            }
         };
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
@@ -160,6 +160,7 @@ public class Login extends AppCompatActivity {
             pDialog.dismiss();
     }
 }
+
 
 
 

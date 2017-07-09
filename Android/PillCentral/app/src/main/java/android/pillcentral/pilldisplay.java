@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 //import android.icu.util.Calendar;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +49,8 @@ import app.AppConfig;
 import app.AppController;
 
 
-public class pilldisplay extends AppCompatActivity { //ListActivity
+public class pilldisplay extends Fragment {
+
     private ProgressDialog pDialog;
     ArrayList<HashMap<String, String>> pillList;
     HashMap<String, String> map;
@@ -56,30 +59,31 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
     private ListView lv;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pilldisplay);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        RelativeLayout rootview = (RelativeLayout) inflater.inflate(R.layout.pilldisplay, container, false);
+
+        String user = getArguments().getString("username");
 
         pillList = new ArrayList<HashMap<String, String>>();
 
-        lv=(ListView) findViewById(R.id.list);
+        lv = (ListView) rootview.findViewById(R.id.list);
 
-        pDialog = new ProgressDialog(this);
+        pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
 
-        final String username = getIntent().getStringExtra("username");
+        final String username = user;
         Calendar cal = Calendar.getInstance();
         String hour = singletodouble(cal.get(Calendar.HOUR_OF_DAY));
         String minute = singletodouble(cal.get(Calendar.MINUTE));
         String sec = singletodouble(cal.get(Calendar.SECOND));
-        int day = cal.get(Calendar.DAY_OF_WEEK)-1;
+        int day = cal.get(Calendar.DAY_OF_WEEK) - 1;
         String DOW = day + "";
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HashMap<String,String> item =(HashMap<String,String>) (lv.getItemAtPosition(position));
-                Intent intent = new Intent(pilldisplay.this, pillinfo.class);
+                HashMap<String, String> item = (HashMap<String, String>) (lv.getItemAtPosition(position));
+                Intent intent = new Intent(getActivity(), pillinfo.class);
                 String pillname = item.get("pill_name");
                 String dos = item.get("dosage");
                 String time = item.get("time");
@@ -93,7 +97,9 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
             }
         });
 
-        new LoadAllPills().execute(username,hour, minute, sec ,DOW);
+        new LoadAllPills().execute(username, hour, minute, sec, DOW);
+
+        return rootview;
     }
 
     public String singletodouble(int single)
@@ -114,47 +120,14 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
         return String.valueOf(single);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.returnback, menu);
-        inflater.inflate(R.menu.weekly, menu);
-        inflater.inflate(R.menu.addpill, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_add:
-                Intent intent = new Intent(pilldisplay.this, addpill.class);
-                intent.putExtra("username", getIntent().getStringExtra("username"));
-                startActivity(intent);
-                return true;
-            case R.id.action_week:
-                Intent intent2 = new Intent(pilldisplay.this, weeklydisplay.class);
-                intent2.putExtra("username", getIntent().getStringExtra("username"));
-                startActivity(intent2);
-                return true;
-            case R.id.action_goback:
-                Intent intent3 = new Intent(pilldisplay.this, Login.class);
-                startActivity(intent3);
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     class LoadAllPills extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(pilldisplay.this);
-            pDialog.setMessage("Loading pills. Please wait...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
+
         }
 
         protected String doInBackground(String... args) {
@@ -225,11 +198,10 @@ public class pilldisplay extends AppCompatActivity { //ListActivity
             // dismiss the dialog after getting all products
             pDialog.dismiss();
             // updating UI from Background Thread
-            runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-
                     ListAdapter adapter = new SimpleAdapter(
-                            pilldisplay.this, pillList,
+                            getActivity(), pillList,
                             R.layout.singlepill, new String[]{
                             "pill_name", "dosage","position", "time"},
                             new int[]{ R.id.pillname, R.id.dosage, R.id.local, R.id.taketime});

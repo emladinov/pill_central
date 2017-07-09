@@ -208,7 +208,7 @@ public class pillinfo extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_cancel:
-                Intent intent = new Intent(pillinfo.this, pilldisplay.class);
+                Intent intent = new Intent(pillinfo.this, Tabs.class);
                 intent.putExtra("username", getIntent().getStringExtra("username"));
                 startActivity(intent);
                 return true;
@@ -417,31 +417,31 @@ public class pillinfo extends AppCompatActivity {
                 public void run() {
                     for(int i=0;i<pillList.size();i++)
                     {
-                    try {
-                        HashMap<String, String> test = pillList.get(i);
-                        if (Integer.parseInt(test.get("day")) == 0) {
-                            SUN.setChecked(true);
+                        try {
+                            HashMap<String, String> test = pillList.get(i);
+                            if (Integer.parseInt(test.get("day")) == 0) {
+                                SUN.setChecked(true);
+                            }
+                            if (Integer.parseInt(test.get("day")) == 1) {
+                                MON.setChecked(true);
+                            }
+                            if (Integer.parseInt(test.get("day")) == 2) {
+                                TUES.setChecked(true);
+                            }
+                            if (Integer.parseInt(test.get("day")) == 3) {
+                                WED.setChecked(true);
+                            }
+                            if (Integer.parseInt(test.get("day")) == 4) {
+                                THUR.setChecked(true);
+                            }
+                            if (Integer.parseInt(test.get("day")) == 5) {
+                                FRI.setChecked(true);
+                            }
+                            if (Integer.parseInt(test.get("day")) == 6) {
+                                SAT.setChecked(true);
+                            }
+                        }catch(Exception e){
                         }
-                        if (Integer.parseInt(test.get("day")) == 1) {
-                            MON.setChecked(true);
-                        }
-                        if (Integer.parseInt(test.get("day")) == 2) {
-                            TUES.setChecked(true);
-                        }
-                        if (Integer.parseInt(test.get("day")) == 3) {
-                            WED.setChecked(true);
-                        }
-                        if (Integer.parseInt(test.get("day")) == 4) {
-                            THUR.setChecked(true);
-                        }
-                        if (Integer.parseInt(test.get("day")) == 5) {
-                            FRI.setChecked(true);
-                        }
-                        if (Integer.parseInt(test.get("day")) == 6) {
-                            SAT.setChecked(true);
-                        }
-                    }catch(Exception e){
-                    }
                     }
                 }
             });

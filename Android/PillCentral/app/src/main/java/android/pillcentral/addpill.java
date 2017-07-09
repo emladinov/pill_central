@@ -171,7 +171,7 @@ public class addpill extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_cancel:
-                Intent intent = new Intent(addpill.this, pilldisplay.class);
+                Intent intent = new Intent(addpill.this, Tabs.class);
                 intent.putExtra("username", getIntent().getStringExtra("username"));
                 startActivity(intent);
                 return true;
@@ -221,7 +221,7 @@ public class addpill extends AppCompatActivity {
                     //checks error node in json
                     if(!error)
                     {
-                        Intent intent = new Intent(addpill.this, pilldisplay.class);
+                        Intent intent = new Intent(addpill.this, Tabs.class);
                         intent.putExtra("username", getIntent().getStringExtra("username"));
                         startActivity(intent);
                         finish();
