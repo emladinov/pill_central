@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="android.pillcentral.profile">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/textView24"
+        android:id="@+id/fname"
+        android:textSize="20sp"
+        android:enabled="false"/>
+
+    <TextView
+        android:text="First Name:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView24"
+        android:textSize="20sp"
+        android:layout_alignBaseline="@+id/fname"
+        android:layout_alignBottom="@+id/fname"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="15dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
+        android:layout_below="@+id/fname"
+        android:layout_alignStart="@+id/fname"
+        android:id="@+id/lname"
+        android:layout_alignEnd="@+id/fname"
+        android:textSize="20sp"
+        android:enabled="false"/>
+
+    <TextView
+        android:text="Last Name:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fname"
+        android:layout_toStartOf="@+id/lname"
+        android:layout_marginTop="10dp"
+        android:id="@+id/textView27"
+        android:textSize="20sp"
+        android:layout_marginRight="15dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:ems="10"
+        android:layout_below="@+id/lname"
+        android:layout_alignStart="@+id/lname"
+        android:id="@+id/phone"
+        android:layout_alignEnd="@+id/lname"
+        android:textSize="20sp"
+        android:enabled="false"/>
+
+    <TextView
+        android:text="Birth Date:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/dob"
+        android:layout_toStartOf="@+id/dob"
+        android:layout_marginBottom="11dp"
+        android:id="@+id/textView29"
+        android:textSize="20sp"
+        android:layout_marginRight="15dp"/>
+
+    <TextView
+        android:text="Phone Number:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView28"
+        android:textSize="20sp"
+        android:layout_below="@+id/lname"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/lname"
+        android:layout_above="@+id/dob"
+        android:textAlignment="viewEnd"
+        android:layout_marginRight="15dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/dob"
+        android:textSize="20sp"
+        android:layout_below="@+id/phone"
+        android:layout_alignEnd="@+id/phone"
+        android:layout_alignStart="@+id/phone"
+        android:enabled="false"/>
+
+    <TextView
+        android:text="Gender:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView30"
+        android:textSize="20sp"
+        android:layout_below="@+id/textView29"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/lname"
+        android:textAlignment="viewEnd"
+        android:layout_marginRight="15dp"/>
+
+    <RadioGroup
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dob"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/textView30">
+        <RadioButton
+            android:id="@+id/male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="M"
+            android:layout_weight="1"
+            android:textAlignment="viewStart"
+            android:enabled="false"/>
+
+        <RadioButton
+            android:id="@+id/female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="F"
+            android:layout_weight="1"
+            android:enabled="false" />
+
+    </RadioGroup>
+
+</RelativeLayout>

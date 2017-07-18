@@ -22,7 +22,8 @@
         <activity android:name=".newUser" />
         <activity android:name=".Tabs" />
         <activity android:name=".pillinfo" />
-        <activity android:name=".profileconfig"></activity>
+        <activity android:name=".profileconfig" />
+        <activity android:name=".profile"></activity>
     </application>
 
 </manifest>

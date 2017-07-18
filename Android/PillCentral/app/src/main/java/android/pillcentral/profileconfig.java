@@ -4,12 +4,19 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -33,9 +40,8 @@ public class profileconfig extends AppCompatActivity {
     private EditText last;
     private EditText phonenum;
     private EditText DOB;
-    private CheckBox male;
-    private CheckBox female;
-    private Button sub;
+    private RadioButton male;
+    private RadioButton female;
     private ProgressDialog pDialog;
 
 
@@ -47,91 +53,113 @@ public class profileconfig extends AppCompatActivity {
 
         first = (EditText) findViewById(R.id.fname);
         last = (EditText) findViewById(R.id.lname);
-        phonenum = (EditText) findViewById(R.id.phone);
+        phonenum = (EditText) findViewById(R.id.textView29);
         DOB = (EditText) findViewById(R.id.DOB);
-        male = (CheckBox) findViewById(R.id.male);
-        female = (CheckBox) findViewById(R.id.female);
-        sub = (Button) findViewById(R.id.submit);
+        male = (RadioButton) findViewById(R.id.male);
+        female = (RadioButton) findViewById(R.id.female);
 
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
-        male.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(male.isChecked()){
-                    female.setChecked(false);
-                }
-                else
-                {
-                    female.setChecked(true);
-                }
-            }
-        });
+        male.toggle();
 
-        female.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(female.isChecked()){
-                    male.setChecked(false);
-                }
-                else{
-                    male.setChecked(true);
-                }
-            }
-        });
+    }
 
-        sub.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                String birth = DOB.getText().toString();
-                String[] datecheck = birth.split("/");
-                datecheck[0] = singletodouble(Integer.parseInt(datecheck[0]));
-                datecheck[1] = singletodouble(Integer.parseInt(datecheck[1]));
-                if(13< Integer.parseInt(datecheck[0]) || Integer.parseInt(datecheck[0]) < 0){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.forward, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_forward:
+                String phone="";
+                String[] datecheck= null;
+                boolean check=true;
+                if(DOB.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
-                }
-                else if(datecheck[0] == "01" || datecheck[0] == "03" || datecheck[0] == "05" || datecheck[0] == "07" || datecheck[0] == "08" || datecheck[0] == "10" || datecheck[0] == "12"){
-                    if(!thirtyonecheck(Integer.parseInt(datecheck[1]))){
-                        Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
-                    }
-                }
-                else if(datecheck[0] == "02"){
-                    if(datecheck[2].length() ==4)
-                    {
-                        if(leapyearcheck(Integer.parseInt(datecheck[2]))){
-                            if(!twentyninecheck(Integer.parseInt(datecheck[1])))
-                            {
-                                Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                        else{
-                            if(!twentyeightcheck(Integer.parseInt(datecheck[1]))){
-                                Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    }else {
-                        Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
-                    }
+                    check = check && false;
                 }
                 else{
-                    if(!thirtycheck(Integer.parseInt(datecheck[1]))){
+                    String birth = DOB.getText().toString();
+                    datecheck = birth.split("/");
+                    datecheck[0] = singletodouble(Integer.parseInt(datecheck[0]));
+                    datecheck[1] = singletodouble(Integer.parseInt(datecheck[1]));
+                    if(13< Integer.parseInt(datecheck[0]) || Integer.parseInt(datecheck[0]) < 0){
                         Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
+                        check = check && false;
+                    }
+                    else if(datecheck[0] == "01" || datecheck[0] == "03" || datecheck[0] == "05" || datecheck[0] == "07" || datecheck[0] == "08" || datecheck[0] == "10" || datecheck[0] == "12"){
+                        if(!thirtyonecheck(Integer.parseInt(datecheck[1]))){
+                            Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
+                            check = check && false;
+                        }
+                    }
+                    else if(datecheck[0] == "02"){
+                        if(datecheck[2].length() ==4)
+                        {
+                            if(leapyearcheck(Integer.parseInt(datecheck[2]))){
+                                if(!twentyninecheck(Integer.parseInt(datecheck[1])))
+                                {
+                                    Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
+                                    check = check && false;
+                                }
+                            }
+                            else{
+                                if(!twentyeightcheck(Integer.parseInt(datecheck[1]))){
+                                    Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
+                                    check = check && false;
+                                }
+                            }
+                        }else {
+                            Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
+                            check = check && false;
+                        }
+                    }
+                    else{
+                        if(!thirtycheck(Integer.parseInt(datecheck[1]))){
+                            Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
+                            check = check && false;
+                        }
                     }
                 }
 
-                if(phonenum.getText().toString().length()!=10){
-                    Toast.makeText(getApplicationContext(), "Invalid phone number", Toast.LENGTH_LONG).show();
+                if (!phonenum.getText().toString().isEmpty()) {
+                    try {
+                        String[] nums = phonenum.getText().toString().split("-");
+                        phone = nums[0] + nums[1] + nums[2];
+                        if(phonenum.length()!=10)
+                        {
+                            Toast.makeText(getApplicationContext(), "Invalid date of birth", Toast.LENGTH_LONG).show();
+                            check = check && false;
+                        }
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), "Invalid phone number", Toast.LENGTH_LONG).show();
+                        check = check && false;
+                    }
                 }
-
-                if(male.isChecked()) {
-                    profile(getIntent().getStringExtra("username"), first.getText().toString(), last.getText().toString(), phonenum.getText().toString(), datecheck[2] + "-" + datecheck[0] + "-" + datecheck[1], "M");
+                if(!first.getText().toString().isEmpty() && !last.getText().toString().isEmpty() && check) {
+                    if (male.isChecked()) {
+                        profile(getIntent().getStringExtra("username"), first.getText().toString(), last.getText().toString(), phone, datecheck[2] + "-" + datecheck[0] + "-" + datecheck[1], "M");
+                    } else {
+                        profile(getIntent().getStringExtra("username"), first.getText().toString(), last.getText().toString(), phone, datecheck[2] + "-" + datecheck[0] + "-" + datecheck[1], "F");
+                    }
+                    Intent intent = new Intent(profileconfig.this, Tabs.class);
+                    intent.putExtra("username", getIntent().getStringExtra("username"));
+                    startActivity(intent);
                 }
                 else
                 {
-                    profile(getIntent().getStringExtra("username"), first.getText().toString(), last.getText().toString(), phonenum.getText().toString(), datecheck[2] + "-" + datecheck[0] + "-" + datecheck[1], "F");
+                    Toast.makeText(getApplicationContext(), "Please enter name", Toast.LENGTH_LONG).show();
                 }
-            }
-        });
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private boolean thirtyonecheck(int days){

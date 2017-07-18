@@ -3,6 +3,7 @@ package android.pillcentral;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +19,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import app.AppConfig;
 
@@ -190,38 +194,34 @@ public class homescreen extends Fragment {
                 if(!error)
                 {
                     pills = json.getJSONArray("Pill");
-                    for (int i = 0; i < 1; i++)
-                    {
-                        JSONObject c = pills.getJSONObject(i);
-                        String pillname = c.getString("pill_name");
-                        String dosage = c.getString("dosage");
-                        String position = c.getString("position");
-                        String time = c.getString("time");
+                    JSONObject c = pills.getJSONObject(0);
 
-                        String ampm = "AM";
-                        String[] ttime = time.split(":");
-                        if(Integer.parseInt(ttime[0]) ==12)
-                        {
-                            ampm = "PM";
-                        }
-                        else if(Integer.parseInt(ttime[0]) >11)
-                        {
-                            ttime[0] = String.valueOf(Integer.parseInt(ttime[0])-12);
-                            ampm = "PM";
-                        }
-                        time = ttime[0]+ ":" + ttime[1];
+                    String pillname = c.getString("pill_name");
+                    String dosage = c.getString("dosage");
+                    String position = c.getString("position");
+                    String time = c.getString("time");
 
-
-                        //create a new HashMap
-                        map = new HashMap<String, String >();
-
-                        map.put("pill_name", pillname);
-                        map.put("dosage", dosage + " mg");
-                        map.put("position", position);
-                        map.put("time", time + " " + ampm);
-
-                        pillList.add(map);
+                    String ampm = "AM";
+                    String[] ttime = time.split(":");
+                    if (Integer.parseInt(ttime[0]) == 12) {
+                        ampm = "PM";
+                    } else if (Integer.parseInt(ttime[0]) > 11) {
+                        ttime[0] = String.valueOf(Integer.parseInt(ttime[0]) - 12);
+                        ampm = "PM";
                     }
+                    time = ttime[0] + ":" + ttime[1];
+
+                    //create a new HashMap
+                    map = new HashMap<String, String>();
+
+                    map.put("pill_name", pillname);
+                    map.put("dosage", dosage + " mg");
+                    map.put("position", position);
+                    map.put("time", time + " " + ampm);
+
+
+                    pillList.add(map);
+
 
                 }
             }catch (JSONException e)
@@ -240,15 +240,76 @@ public class homescreen extends Fragment {
                     for(int i=0;i<pillList.size();i++) {
                         try {
                             HashMap<String, String> test = pillList.get(i);
-                            pill.setText(test.get("pill_name"));
-                            dosage.setText(test.get("dosage"));
-                            loc.setText("Box " + test.get("position"));
-                            time.setText(test.get("time"));
+                            if(test.get("pill_name") != null) {
+                                pill.setText(test.get("pill_name"));
+                            }else
+                            {
+                                pill.setText("No");
+                            }
+                            if(test.get("dosage") != null) {
+                                dosage.setText(test.get("dosage"));
+                            }else
+                            {
+                                dosage.setText("pills");
+                            }
+                            if(test.get("position") != null) {
+                                loc.setText("Box " + test.get("position"));
+                            }else
+                            {
+                                loc.setText("remaining");
+                            }
+                            if(test.get("time") != null) {
+                                //time.setText(test.get("time"));
+                                //time.setText());
+                                countdown(test.get("time"));
+                            }else
+                            {
+                                time.setText("today");
+                            }
                         }catch(Exception e){
                         }
                     }
                 }
             });
         }
+
+        private void countdown(String pilltime){
+            Calendar cal = Calendar.getInstance();
+            String hour = singletodouble(cal.get(Calendar.HOUR_OF_DAY));
+            String minute = singletodouble(cal.get(Calendar.MINUTE));
+            String sec = singletodouble(cal.get(Calendar.SECOND));
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+            final String[] timesplitter = pilltime.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+            if(timesplitter[3].equals(" PM")) {
+                pilltime = String.valueOf(Integer.parseInt(timesplitter[0])+12) + ":" + timesplitter[2] + ":00";
+            }
+            else{
+                pilltime = timesplitter[0] + ":" + timesplitter[2] + ":00";
+            }
+            try{
+                Date ctime = format.parse(hour + ":" + minute + ":" + sec);
+                Date ptime = format.parse(pilltime);
+                long diff = ptime.getTime() - ctime.getTime();
+                timer(diff);
+            }catch (Exception e){time.setText("Error: " + e.getMessage());}
+
+        }
+    }
+
+    private void timer(long mills) {
+        new CountDownTimer(mills, 1000){
+            public void onTick(long millisUntilFinished) {
+                long millis = millisUntilFinished;
+                int Hours = (int) (millis/(1000 * 60 * 60));
+                int Mins = (int) (millis/(1000*60)) % 60;
+                int Secs = (int) (millis/1000)%60;
+                time.setText(singletodouble(Hours) + ":" + singletodouble(Mins) + ":" + singletodouble(Secs));
+            }
+
+            public void onFinish() {
+
+            }
+        }.start();
+
     }
 }

@@ -13,6 +13,8 @@ pill_name nvarchar(128) NOT NULL,
 position int NOT NULL,
 time time NOT NULL,
 DOW ENUM('1','2','3','4','5','6','7'),
+additionalinfo TEXT,
+itTaken boolean NOT NULL,
 PRIMARY KEY(S_PK),
 Foreign Key(user_ID) REFERENCES login(user_ID)
 );
@@ -36,7 +38,7 @@ settingID int AUTO_INCREMENT,
 user_ID int NOT NULL,
 numofboxes int NOT NULL,
 boxID int NOT NULL,
-altertime int NOT NULL,
+alerttime int NOT NULL,
 PRIMARY KEY(settingID),
 Foreign KEY(user_ID) REFERENCES login(user_ID)
 );

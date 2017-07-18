@@ -5,46 +5,6 @@
     android:orientation="vertical">
 
     <TextView
-        android:text="Box ID:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView18"
-        android:textSize="20sp"
-        android:layout_below="@+id/editText3"
-        android:layout_toStartOf="@+id/editText3" />
-
-    <EditText
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="A05FP"
-        android:ems="10"
-        android:id="@+id/editText5"
-        android:textSize="18sp"
-        android:layout_alignBaseline="@+id/textView18"
-        android:layout_alignBottom="@+id/textView18"
-        android:layout_alignStart="@+id/editText3" />
-
-    <EditText
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:layout_below="@+id/textView18"
-        android:layout_alignStart="@+id/editText5"
-        android:id="@+id/editText6"
-        android:text="15" />
-
-    <TextView
-        android:text="Alert Time (minutes):"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView21"
-        android:textSize="20sp"
-        android:layout_below="@+id/textView18"
-        android:layout_toStartOf="@+id/editText3" />
-
-    <TextView
         android:text="Number of Boxes:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +18,8 @@
     <EditText
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/editText3"
+        android:enabled="false"
+        android:id="@+id/boxes"
         android:text="00"
         android:layout_width="30dp"
         android:textSize="18sp"
@@ -67,5 +28,59 @@
         android:layout_alignBaseline="@+id/textView13"
         android:layout_alignBottom="@+id/textView13"
         android:layout_toEndOf="@+id/textView13" />
+
+    <TextView
+        android:text="Alert Time (minutes):"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView21"
+        android:textSize="20sp"
+        android:layout_alignBaseline="@+id/alerttime"
+        android:layout_alignBottom="@+id/alerttime"
+        android:layout_alignEnd="@+id/textView18" />
+
+    <TextView
+        android:text="Box ID:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView18"
+        android:textSize="20sp"
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/boxes"
+        android:layout_toStartOf="@+id/boxes" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="A05FP"
+        android:ems="10"
+        android:enabled="false"
+        android:id="@+id/boxid"
+        android:textSize="18sp"
+        android:layout_alignBaseline="@+id/textView18"
+        android:layout_alignBottom="@+id/textView18"
+        android:layout_alignStart="@+id/boxes" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:enabled="false"
+        android:id="@+id/alerttime"
+        android:text="15"
+        android:layout_below="@+id/boxid"
+        android:layout_alignStart="@+id/boxid"
+        android:layout_marginTop="26dp" />
+
+    <Button
+        android:text="Profile Settings"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/profilebtn"
+        android:layout_below="@+id/alerttime"
+        android:layout_alignEnd="@+id/boxes"
+        android:layout_marginTop="25dp" />
 
 </RelativeLayout>

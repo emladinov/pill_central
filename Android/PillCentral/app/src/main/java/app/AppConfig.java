@@ -34,5 +34,17 @@ public class AppConfig {
 
     // Server name url
     public static String URL_UNAME = "http://turing.manhattan.edu/~nwilk01/Android/username.php";
+
+    // Server settings url
+    public static String URL_SETTINGS = "http://turing.manhattan.edu/~nwilk01/Android/settings.php";
+
+    // Server user settings url
+    public static String URL_INFO = "http://turing.manhattan.edu/~nwilk01/Android/settingsinfo.php";
+
+    // Server update settings url
+    public static String URL_SETTINGSUPDATE = "http://turing.manhattan.edu/~nwilk01/Android/settingsupdate.php";
+
+    // Server additonalinfo url
+    public static String URL_ADDITIONAL = "http://turing.manhattan.edu/~nwilk01/Android/pilladditishinfo.php";
 }
 

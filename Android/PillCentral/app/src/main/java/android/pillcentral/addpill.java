@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -48,6 +49,7 @@ public class addpill extends AppCompatActivity {
     private EditText pillname;
     private EditText dosage;
     private EditText location;
+    private EditText pi;
     private Button settime;
     private Button submit;
     private CheckBox SUN;
@@ -59,6 +61,8 @@ public class addpill extends AppCompatActivity {
     private CheckBox SAT;
     private ProgressDialog pDialog;
 
+    int nums = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +73,7 @@ public class addpill extends AppCompatActivity {
         dosage = (EditText) findViewById(R.id.dosage);
         pillname = (EditText) findViewById(R.id.pilltxt);
         location = (EditText) findViewById(R.id.loc);
+        pi = (EditText) findViewById(R.id.pillinformation);
         timeset = (TextView) findViewById(R.id.timeset);
         ampm = (TextView) findViewById(R.id.AMPM);
         SUN = (CheckBox) findViewById(R.id.sun);
@@ -126,33 +131,35 @@ public class addpill extends AppCompatActivity {
                         ttime[0] = singletodouble(h);
                     }
 
-                    if(!SUN.isChecked() && !MON.isChecked() && !TUES.isChecked() && !WED.isChecked() && !THUR.isChecked() && !FRI.isChecked() && !SAT.isChecked())
-                    {
-                        Toast.makeText(getApplicationContext(), "Please choose at least 1 day of the week", Toast.LENGTH_LONG).show();
-                    }
+                    if(Integer.parseInt(local) < nums) {
+                        if (!SUN.isChecked() && !MON.isChecked() && !TUES.isChecked() && !WED.isChecked() && !THUR.isChecked() && !FRI.isChecked() && !SAT.isChecked()) {
+                            Toast.makeText(getApplicationContext(), "Please choose at least 1 day of the week", Toast.LENGTH_LONG).show();
+                        }
 
-                    if(SUN.isChecked())
+                        if (SUN.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill, dos, "0", ttime[0], ttime[1], "00", local, pi.getText().toString());
+                        }
+                        if (MON.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill, dos, "1", ttime[0], ttime[1], "00", local, pi.getText().toString());
+                        }
+                        if (TUES.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill, dos, "2", ttime[0], ttime[1], "00", local, pi.getText().toString());
+                        }
+                        if (WED.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill, dos, "3", ttime[0], ttime[1], "00", local, pi.getText().toString());
+                        }
+                        if (THUR.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill, dos, "4", ttime[0], ttime[1], "00", local, pi.getText().toString());
+                        }
+                        if (FRI.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill, dos, "5", ttime[0], ttime[1], "00", local, pi.getText().toString());
+                        }
+                        if (SAT.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill, dos, "6", ttime[0], ttime[1], "00", local, pi.getText().toString());
+                        }
+                    }else
                     {
-                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "0", ttime[0], ttime[1], "00", local);
-                    }
-                    if(MON.isChecked())
-                    {
-                        pillsubmit(getIntent().getStringExtra("username"), pill ,  dos ,"1", ttime[0], ttime[1], "00", local);
-                    }
-                    if(TUES.isChecked()) {
-                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "2", ttime[0], ttime[1], "00", local);
-                    }
-                    if(WED.isChecked()) {
-                        pillsubmit(getIntent().getStringExtra("username"), pill ,  dos , "3", ttime[0], ttime[1], "00", local);
-                    }
-                    if(THUR.isChecked()) {
-                        pillsubmit(getIntent().getStringExtra("username"), pill ,  dos , "4", ttime[0], ttime[1], "00", local);
-                    }
-                    if(FRI.isChecked()) {
-                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "5", ttime[0], ttime[1], "00", local);
-                    }
-                    if(SAT.isChecked()) {
-                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "6", ttime[0], ttime[1], "00", local);
+                        Toast.makeText(getApplicationContext(), "Box does not exist", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -198,7 +205,7 @@ public class addpill extends AppCompatActivity {
         return String.valueOf(single);
     }
 
-    private void pillsubmit(final String username, final String pill,final String dosage, final String d, final String hour, final String minute, final String second, final String local )
+    private void pillsubmit(final String username, final String pill,final String dosage, final String d, final String hour, final String minute, final String second, final String local, final String ai )
     {
         final String tag_string_req = "req_registration";
 
@@ -256,6 +263,65 @@ public class addpill extends AppCompatActivity {
                 params.put("hour", hour);
                 params.put("min", minute);
                 params.put("sec", second);
+                params.put("addinfo", ai);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    private void boxnumbers(final String username, final String pill,final String dosage, final String d, final String hour, final String minute, final String second, final String local, final String ai )
+    {
+        final String tag_string_req = "req_registration";
+
+        pDialog.setMessage("Submitting request ...");
+        showDialog();
+
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_SETTINGS, new Response.Listener<String>()
+        {
+
+            @Override
+            public void onResponse(String response)
+            {
+                Log.d(TAG, "Submission Response: " + response.toString());
+                hideDialog();
+
+                try{
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    //checks error node in json
+                    if(!error)
+                    {
+                        JSONArray pills = jObj.getJSONArray("Settings");
+                        JSONObject c = pills.getJSONObject(0);
+
+                        nums = Integer.parseInt(c.getString("num"));
+                    }
+                }catch (JSONException e)
+                {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(),Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                Log.e(TAG, "Enter Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams()
+            {
+                //Posting paramters to login URL
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
                 return params;
             }
         };

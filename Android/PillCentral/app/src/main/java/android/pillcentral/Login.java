@@ -21,6 +21,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.crypto.Cipher;
+
 import app.AppConfig;
 import app.AppController;
 
@@ -58,7 +60,7 @@ public class Login extends AppCompatActivity {
         btnNewUsr.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view)
             {
-                Intent intent = new Intent(Login.this, newUser.class);
+                Intent intent = new Intent(Login.this, profileconfig.class);
                 startActivity(intent);
             }
         });
@@ -68,6 +70,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
                 String username = inputusername.getText().toString();
                 String password = inputpassword.getText().toString();
+
 
                 if (!username.isEmpty() && !password.isEmpty()) {
                     checkLogin(username, password);

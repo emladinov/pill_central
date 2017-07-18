@@ -5,6 +5,8 @@ import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.os.AsyncTask;
 import android.support.annotation.IntegerRes;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +47,7 @@ public class pillinfo extends AppCompatActivity {
     private EditText pillname;
     private EditText dosage;
     private EditText boxnum;
+    private EditText ai;
     private CheckBox SUN;
     private CheckBox MON;
     private CheckBox TUES;
@@ -55,8 +58,10 @@ public class pillinfo extends AppCompatActivity {
     private TextView AMPM;
     private TextView time;
     private Button settime;
-    private Button submit;
     private Button del;
+    private MenuItem editcheck;
+
+    boolean cancel = false;
 
     ArrayList<HashMap<String, String>> pillList;
     HashMap<String, String> map;
@@ -79,11 +84,13 @@ public class pillinfo extends AppCompatActivity {
         FRI = (CheckBox) findViewById(R.id.fri);
         SAT = (CheckBox) findViewById(R.id.sat);
         settime = (Button) findViewById(R.id.timechange);
-        submit = (Button) findViewById(R.id.apply);
         del = (Button) findViewById(R.id.deletion);
         dosage = (EditText) findViewById(R.id.dosage);
         pillname = (EditText) findViewById(R.id.pillname);
         boxnum = (EditText) findViewById(R.id.boxnum);
+        ai = (EditText) findViewById(R.id.pilladdinfo);
+
+
 
         pillList = new ArrayList<HashMap<String, String>>();
 
@@ -105,73 +112,12 @@ public class pillinfo extends AppCompatActivity {
         boxnum.setText(getIntent().getStringExtra("box"));
 
         new finddays().execute(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
+        new additionalinfo().execute(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
 
         settime.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
                 DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getFragmentManager(),"TimePicker");
-            }
-        });
-
-
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                String[] dosagesplitter = getIntent().getStringExtra("dos").split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
-                deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
-
-                String pill = pillname.getText().toString();
-                String dos = dosage.getText().toString();
-                String local = boxnum.getText().toString();
-                String ctime = time.getText().toString();
-                String ampm = AMPM.getText().toString();
-                int h;
-                String[] ttime = null;
-                if (pill.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please enter a pill name", Toast.LENGTH_LONG).show();
-                } else if (dos.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please enter a dosage, if not stated enter 0", Toast.LENGTH_LONG).show();
-                } else if (local.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please enter a pill box location", Toast.LENGTH_LONG).show();
-                } else if (!pill.isEmpty() && !dos.isEmpty() && !local.isEmpty()) {
-                    ttime = ctime.split(":");
-                    h = Integer.parseInt(ttime[0]);
-                    if (ampm.equals(" PM")) {
-                        h = h + 12;
-                        ttime[0] = String.valueOf(h);
-                    } else {
-                        ttime[0] = String.valueOf(h);
-                    }
-
-                    if(!SUN.isChecked() && !MON.isChecked() && !TUES.isChecked() && !WED.isChecked() && !THUR.isChecked() && !FRI.isChecked() && !SAT.isChecked())
-                    {
-                        Toast.makeText(getApplicationContext(), "Please choose at least 1 day of the week", Toast.LENGTH_LONG).show();
-                    }
-
-                    if(SUN.isChecked())
-                    {
-                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "0", ttime[0], ttime[1], "00", local);
-                    }
-                    if(MON.isChecked())
-                    {
-                        pillsubmit(getIntent().getStringExtra("username"), pill ,  dos ,"1", ttime[0], ttime[1], "00", local);
-                    }
-                    if(TUES.isChecked()) {
-                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "2", ttime[0], ttime[1], "00", local);
-                    }
-                    if(WED.isChecked()) {
-                        pillsubmit(getIntent().getStringExtra("username"), pill ,  dos , "3", ttime[0], ttime[1], "00", local);
-                    }
-                    if(THUR.isChecked()) {
-                        pillsubmit(getIntent().getStringExtra("username"), pill ,  dos , "4", ttime[0], ttime[1], "00", local);
-                    }
-                    if(FRI.isChecked()) {
-                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "5", ttime[0], ttime[1], "00", local);
-                    }
-                    if(SAT.isChecked()) {
-                        pillsubmit(getIntent().getStringExtra("username"), pill , dos , "6", ttime[0], ttime[1], "00", local);
-                    }
-                }
             }
         });
 
@@ -184,7 +130,7 @@ public class pillinfo extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 String[] dosagesplitter = getIntent().getStringExtra("dos").split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
                                 deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
-                                Intent intent = new Intent(pillinfo.this, pilldisplay.class);
+                                Intent intent = new Intent(pillinfo.this, Tabs.class);
                                 intent.putExtra("username", getIntent().getStringExtra("username"));
                                 startActivity(intent);
                                 finish();
@@ -198,19 +144,122 @@ public class pillinfo extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.cancel, menu);
+        getMenuInflater().inflate(R.menu.edit, menu);
+        getMenuInflater().inflate(R.menu.cancel, menu);
+        editcheck = menu.findItem(R.id.action_edit);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_cancel:
-                Intent intent = new Intent(pillinfo.this, Tabs.class);
-                intent.putExtra("username", getIntent().getStringExtra("username"));
-                startActivity(intent);
+                if(editcheck.getIcon().getConstantState().equals(
+                        getResources().getDrawable(R.drawable.ic_menu_edit_dark).getConstantState())) {
+                    Intent intent = new Intent(pillinfo.this, Tabs.class);
+                    intent.putExtra("username", getIntent().getStringExtra("username"));
+                    startActivity(intent);
+                    return true;
+                }else{
+                    pillname.setEnabled(false);
+                    settime.setVisibility(View.INVISIBLE);
+                    dosage.setEnabled(false);
+                    boxnum.setEnabled(false);
+                    MON.setEnabled(false);
+                    TUES.setEnabled(false);
+                    WED.setEnabled(false);
+                    THUR.setEnabled(false);
+                    FRI.setEnabled(false);
+                    SAT.setEnabled(false);
+                    SUN.setEnabled(false);
+                    ai.setEnabled(false);
+                    editcheck.setIcon(R.drawable.ic_menu_edit_dark);
+                    return true;
+                }
+            case R.id.action_edit:
+                if(item.getIcon().getConstantState().equals(
+                        getResources().getDrawable(R.drawable.ic_menu_check_dark).getConstantState()))
+                {
+                    String[] dosagesplitter = getIntent().getStringExtra("dos").split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+                    final String[] timesplitter = getIntent().getStringExtra("time").split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
+                    int h = Integer.parseInt(timesplitter[0]);
+                    if (timesplitter[3].equals(" PM")) {
+                        h = h + 12;
+                        timesplitter[0] = String.valueOf(h);
+                    } else {
+                        timesplitter[0] = String.valueOf(h);
+                    }
+                    deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
+
+                    String pill = pillname.getText().toString();
+                    String dos = dosage.getText().toString();
+                    String local = boxnum.getText().toString();
+                    String ctime = time.getText().toString();
+                    String ampm = AMPM.getText().toString();
+
+                    String[] ttime = null;
+                    if (pill.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Please enter a pill name", Toast.LENGTH_LONG).show();
+                    } else if (dos.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Please enter a dosage, if not stated enter 0", Toast.LENGTH_LONG).show();
+                    } else if (local.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Please enter a pill box location", Toast.LENGTH_LONG).show();
+                    } else if (!pill.isEmpty() && !dos.isEmpty() && !local.isEmpty()) {
+                        ttime = ctime.split(":");
+                        h = Integer.parseInt(ttime[0]);
+                        if (ampm.equals("PM") || ampm.equals(" PM")) {
+                            h = h + 12;
+                            ttime[0] = String.valueOf(h);
+                        } else {
+                            ttime[0] = String.valueOf(h);
+                        }
+
+                        if(!SUN.isChecked() && !MON.isChecked() && !TUES.isChecked() && !WED.isChecked() && !THUR.isChecked() && !FRI.isChecked() && !SAT.isChecked())
+                        {
+                            Toast.makeText(getApplicationContext(), "Please choose at least 1 day of the week", Toast.LENGTH_LONG).show();
+                        }
+
+                        if(SUN.isChecked())
+                        {
+                            pillsubmit(getIntent().getStringExtra("username"), pill , dos , "0", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                        }
+                        if(MON.isChecked())
+                        {
+                            pillsubmit(getIntent().getStringExtra("username"), pill ,  dos ,"1", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                        }
+                        if(TUES.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill , dos , "2", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                        }
+                        if(WED.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill ,  dos , "3", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                        }
+                        if(THUR.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill ,  dos , "4", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                        }
+                        if(FRI.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill , dos , "5", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                        }
+                        if(SAT.isChecked()) {
+                            pillsubmit(getIntent().getStringExtra("username"), pill , dos , "6", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                        }
+                    }
+                }else{
+                    pillname.setEnabled(true);
+                    settime.setVisibility(View.VISIBLE);
+                    dosage.setEnabled(true);
+                    boxnum.setEnabled(true);
+                    MON.setEnabled(true);
+                    TUES.setEnabled(true);
+                    WED.setEnabled(true);
+                    THUR.setEnabled(true);
+                    FRI.setEnabled(true);
+                    SAT.setEnabled(true);
+                    SUN.setEnabled(true);
+                    ai.setEnabled(true);
+                    item.setIcon(R.drawable.ic_menu_check_dark);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -278,7 +327,7 @@ public class pillinfo extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
-    private void pillsubmit(final String username, final String pill,final String dosage, final String d, final String hour, final String minute, final String second, final String local )
+    private void pillsubmit(final String username, final String pill,final String dosage, final String d, final String hour, final String minute, final String second, final String local, final String ai )
     {
         final String tag_string_req = "req_registration";
 
@@ -301,7 +350,7 @@ public class pillinfo extends AppCompatActivity {
                     //checks error node in json
                     if(!error)
                     {
-                        Intent intent = new Intent(pillinfo.this, pilldisplay.class);
+                        Intent intent = new Intent(pillinfo.this, Tabs.class);
                         intent.putExtra("username", getIntent().getStringExtra("username"));
                         startActivity(intent);
                         finish();
@@ -336,6 +385,7 @@ public class pillinfo extends AppCompatActivity {
                 params.put("hour", hour);
                 params.put("min", minute);
                 params.put("sec", second);
+                params.put("addinfo", ai);
                 return params;
             }
         };
@@ -447,4 +497,74 @@ public class pillinfo extends AppCompatActivity {
             });
         }
     }
+
+    class additionalinfo extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(String... args) {
+
+            HashMap<String,String > params = new HashMap<>();
+            params.put("username", args[0]);
+            params.put("pillname", args[1]);
+            params.put("location", args[5]);
+            params.put("hour", args[2]);
+            params.put("min", args[3]);
+            params.put("sec", args[4]);
+
+            Log.d("request", "starting");
+            // getting JSON string from URL
+            JSONObject json = jParser.makeHttpRequest(AppConfig.URL_ADDITIONAL , "POST", params);
+
+            Log.d("All Products: ", json.toString());
+
+            try{
+
+                boolean error = json.getBoolean("error");
+
+                //checks error node in json
+                if(!error) {
+                    pills = json.getJSONArray("info");
+                    for (int i = 0; i < pills.length(); i++) {
+                        JSONObject c = pills.getJSONObject(i);
+                        String addinfo = c.getString("addish");
+
+                        //create a new HashMap
+                        map = new HashMap<String, String>();
+
+                        map.put("info", addinfo);
+
+                        pillList.add(map);
+                    }
+                }
+            }catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after getting all products
+            pDialog.dismiss();
+            // updating UI from Background Thread
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    for(int i=0;i<pillList.size();i++)
+                    {
+                        try {
+                            HashMap<String, String> test = pillList.get(i);
+                            ai.setText(test.get("info"));
+                        }catch(Exception e){
+                        }
+                    }
+                }
+            });
+        }
+    }
 }
+
+
