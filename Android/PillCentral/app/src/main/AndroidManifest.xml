@@ -23,7 +23,8 @@
         <activity android:name=".Tabs" />
         <activity android:name=".pillinfo" />
         <activity android:name=".profileconfig" />
-        <activity android:name=".profile"></activity>
+        <activity android:name=".profile" />
+        <activity android:name=".systemsettings"></activity>
     </application>
 
 </manifest>

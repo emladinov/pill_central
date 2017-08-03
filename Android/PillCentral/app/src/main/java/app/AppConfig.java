@@ -44,7 +44,10 @@ public class AppConfig {
     // Server update settings url
     public static String URL_SETTINGSUPDATE = "http://turing.manhattan.edu/~nwilk01/Android/settingsupdate.php";
 
-    // Server additonalinfo url
+    // Server additonal info url
     public static String URL_ADDITIONAL = "http://turing.manhattan.edu/~nwilk01/Android/pilladditishinfo.php";
+
+    // Server box check
+    public static String URL_BOX = "http://turing.manhattan.edu/~nwilk01/Android/boxcheck.php";
 }
 

@@ -61,7 +61,8 @@ public class pillinfo extends AppCompatActivity {
     private Button del;
     private MenuItem editcheck;
 
-    boolean cancel = false;
+    int nums = 0;
+    boolean checkers = false;
 
     ArrayList<HashMap<String, String>> pillList;
     HashMap<String, String> map;
@@ -90,10 +91,7 @@ public class pillinfo extends AppCompatActivity {
         boxnum = (EditText) findViewById(R.id.boxnum);
         ai = (EditText) findViewById(R.id.pilladdinfo);
 
-
-
         pillList = new ArrayList<HashMap<String, String>>();
-
 
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -111,6 +109,7 @@ public class pillinfo extends AppCompatActivity {
         }
         boxnum.setText(getIntent().getStringExtra("box"));
 
+        boxnumbers(getIntent().getStringExtra("username"));
         new finddays().execute(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
         new additionalinfo().execute(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
 
@@ -191,7 +190,6 @@ public class pillinfo extends AppCompatActivity {
                     } else {
                         timesplitter[0] = String.valueOf(h);
                     }
-                    deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
 
                     String pill = pillname.getText().toString();
                     String dos = dosage.getText().toString();
@@ -216,33 +214,44 @@ public class pillinfo extends AppCompatActivity {
                             ttime[0] = String.valueOf(h);
                         }
 
-                        if(!SUN.isChecked() && !MON.isChecked() && !TUES.isChecked() && !WED.isChecked() && !THUR.isChecked() && !FRI.isChecked() && !SAT.isChecked())
-                        {
-                            Toast.makeText(getApplicationContext(), "Please choose at least 1 day of the week", Toast.LENGTH_LONG).show();
-                        }
+                        new boxcheck().execute(getIntent().getStringExtra("username"), local, pill, dos);
+                        if(Integer.parseInt(local) <= nums && Integer.parseInt(local) >0 && checkers) {
+                            if (!SUN.isChecked() && !MON.isChecked() && !TUES.isChecked() && !WED.isChecked() && !THUR.isChecked() && !FRI.isChecked() && !SAT.isChecked()) {
+                                Toast.makeText(getApplicationContext(), "Please choose at least 1 day of the week", Toast.LENGTH_LONG).show();
+                            }
+                            if (SUN.isChecked()) {
+                                deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
+                                pillsubmit(getIntent().getStringExtra("username"), pill, dos, "0", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                            }
+                            if (MON.isChecked()) {
+                                deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
+                                pillsubmit(getIntent().getStringExtra("username"), pill, dos, "1", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                            }
+                            if (TUES.isChecked()) {
+                                deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
+                                pillsubmit(getIntent().getStringExtra("username"), pill, dos, "2", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                            }
+                            if (WED.isChecked()) {
+                                deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
+                                pillsubmit(getIntent().getStringExtra("username"), pill, dos, "3", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                            }
+                            if (THUR.isChecked()) {
+                                deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
+                                pillsubmit(getIntent().getStringExtra("username"), pill, dos, "4", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                            }
+                            if (FRI.isChecked()) {
+                                deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
+                                pillsubmit(getIntent().getStringExtra("username"), pill, dos, "5", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                            }
+                            if (SAT.isChecked()) {
+                                deletepills(getIntent().getStringExtra("username"), getIntent().getStringExtra("pill"), dosagesplitter[0], timesplitter[0], timesplitter[2], "00", getIntent().getStringExtra("box"));
+                                pillsubmit(getIntent().getStringExtra("username"), pill, dos, "6", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                            }
+                        }else if (Integer.parseInt(local) > nums || Integer.parseInt(local) <= 0) {
+                            Toast.makeText(getApplicationContext(), "Box does not exist", Toast.LENGTH_LONG).show();
 
-                        if(SUN.isChecked())
-                        {
-                            pillsubmit(getIntent().getStringExtra("username"), pill , dos , "0", ttime[0], ttime[1], "00", local, ai.getText().toString());
-                        }
-                        if(MON.isChecked())
-                        {
-                            pillsubmit(getIntent().getStringExtra("username"), pill ,  dos ,"1", ttime[0], ttime[1], "00", local, ai.getText().toString());
-                        }
-                        if(TUES.isChecked()) {
-                            pillsubmit(getIntent().getStringExtra("username"), pill , dos , "2", ttime[0], ttime[1], "00", local, ai.getText().toString());
-                        }
-                        if(WED.isChecked()) {
-                            pillsubmit(getIntent().getStringExtra("username"), pill ,  dos , "3", ttime[0], ttime[1], "00", local, ai.getText().toString());
-                        }
-                        if(THUR.isChecked()) {
-                            pillsubmit(getIntent().getStringExtra("username"), pill ,  dos , "4", ttime[0], ttime[1], "00", local, ai.getText().toString());
-                        }
-                        if(FRI.isChecked()) {
-                            pillsubmit(getIntent().getStringExtra("username"), pill , dos , "5", ttime[0], ttime[1], "00", local, ai.getText().toString());
-                        }
-                        if(SAT.isChecked()) {
-                            pillsubmit(getIntent().getStringExtra("username"), pill , dos , "6", ttime[0], ttime[1], "00", local, ai.getText().toString());
+                        }else {
+                            Toast.makeText(getApplicationContext(), "Box already taken by another medication", Toast.LENGTH_LONG).show();
                         }
                     }
                 }else{
@@ -561,6 +570,121 @@ public class pillinfo extends AppCompatActivity {
                         }catch(Exception e){
                         }
                     }
+                }
+            });
+        }
+    }
+
+    private void boxnumbers(final String username)
+    {
+        final String tag_string_req = "req_registration";
+
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.URL_SETTINGS, new Response.Listener<String>()
+        {
+
+            @Override
+            public void onResponse(String response)
+            {
+                Log.d(TAG, "Submission Response: " + response.toString());
+                hideDialog();
+
+                try{
+                    JSONObject jObj = new JSONObject(response);
+                    boolean error = jObj.getBoolean("error");
+
+                    //checks error node in json
+                    if(!error)
+                    {
+                        JSONArray pills = jObj.getJSONArray("Settings");
+                        JSONObject c = pills.getJSONObject(0);
+
+                        nums = Integer.parseInt(c.getString("num"));
+                    }
+                }catch (JSONException e)
+                {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(),Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                Log.e(TAG, "Enter Error: " + error.getMessage());
+                Toast.makeText(getApplicationContext(),
+                        error.getMessage(), Toast.LENGTH_LONG).show();
+                hideDialog();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams()
+            {
+                //Posting paramters to login URL
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                return params;
+            }
+        };
+        // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    class boxcheck extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(String... args) {
+
+            HashMap<String,String > params = new HashMap<>();
+            params.put("username",args[0]);
+
+            Log.d("request", "starting");
+            // getting JSON string from URL
+            JSONObject json = jParser.makeHttpRequest(AppConfig.URL_DISTINCT, "POST", params);
+
+            Log.d("All Products: ", json.toString());
+
+            try{
+
+                boolean error = json.getBoolean("error");
+
+                //checks error node in json
+                if(!error)
+                {
+                    pills = json.getJSONArray("Pill");
+                    for (int i = 0; i < pills.length(); i++)
+                    {
+                        JSONObject c = pills.getJSONObject(i);
+                        String pillname = c.getString("pill_name");
+                        String dosage = c.getString("dosage");
+                        String position = c.getString("position");
+
+                        if(args[1].equals(position)){
+                            if(args[2].equals(pillname)){
+                                checkers = true;
+                            }
+                        }
+
+                    }
+                }
+            }catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after getting all products
+            pDialog.dismiss();
+            // updating UI from Background Thread
+            runOnUiThread(new Runnable() {
+                public void run() {
+
                 }
             });
         }

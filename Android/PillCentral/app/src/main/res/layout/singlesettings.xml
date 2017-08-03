@@ -8,12 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/itemtitle"
-        android:textSize="22sp" />
+        android:textSize="14sp"
+        android:textStyle="normal|italic" />
 
     <TextView
         android:text="TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/itemselection"
-        android:textSize="16sp" />
+        android:textSize="22sp" />
 </LinearLayout>

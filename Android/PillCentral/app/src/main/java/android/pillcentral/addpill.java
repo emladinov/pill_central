@@ -5,6 +5,7 @@ import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,7 +18,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.CheckBox;
+import android.widget.ListAdapter;
 import android.widget.SeekBar;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -61,7 +64,11 @@ public class addpill extends AppCompatActivity {
     private CheckBox SAT;
     private ProgressDialog pDialog;
 
+    JSONParser jParser = new JSONParser();
+    JSONArray pills = null;
+
     int nums = 0;
+    boolean checkers = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,8 @@ public class addpill extends AppCompatActivity {
 
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
+
+        boxnumbers(getIntent().getStringExtra("username"));
 
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
@@ -131,7 +140,8 @@ public class addpill extends AppCompatActivity {
                         ttime[0] = singletodouble(h);
                     }
 
-                    if(Integer.parseInt(local) < nums) {
+                    new boxcheck().execute(getIntent().getStringExtra("username"), local, pill, dos);
+                    if(Integer.parseInt(local) <= nums && Integer.parseInt(local) >0 && checkers) {
                         if (!SUN.isChecked() && !MON.isChecked() && !TUES.isChecked() && !WED.isChecked() && !THUR.isChecked() && !FRI.isChecked() && !SAT.isChecked()) {
                             Toast.makeText(getApplicationContext(), "Please choose at least 1 day of the week", Toast.LENGTH_LONG).show();
                         }
@@ -157,9 +167,11 @@ public class addpill extends AppCompatActivity {
                         if (SAT.isChecked()) {
                             pillsubmit(getIntent().getStringExtra("username"), pill, dos, "6", ttime[0], ttime[1], "00", local, pi.getText().toString());
                         }
-                    }else
-                    {
+                    }else if (Integer.parseInt(local) > nums || Integer.parseInt(local) <= 0) {
                         Toast.makeText(getApplicationContext(), "Box does not exist", Toast.LENGTH_LONG).show();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Box already taken by another medication", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -271,7 +283,7 @@ public class addpill extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
     }
 
-    private void boxnumbers(final String username, final String pill,final String dosage, final String d, final String hour, final String minute, final String second, final String local, final String ai )
+    private void boxnumbers(final String username)
     {
         final String tag_string_req = "req_registration";
 
@@ -327,6 +339,66 @@ public class addpill extends AppCompatActivity {
         };
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+    }
+
+    class boxcheck extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(String... args) {
+
+            HashMap<String,String > params = new HashMap<>();
+            params.put("username",args[0]);
+
+            Log.d("request", "starting");
+            // getting JSON string from URL
+            JSONObject json = jParser.makeHttpRequest(AppConfig.URL_DISTINCT, "POST", params);
+
+            Log.d("All Products: ", json.toString());
+
+            try{
+
+                boolean error = json.getBoolean("error");
+
+                //checks error node in json
+                if(!error)
+                {
+                    pills = json.getJSONArray("Pill");
+                    for (int i = 0; i < pills.length(); i++)
+                    {
+                        JSONObject c = pills.getJSONObject(i);
+                        String pillname = c.getString("pill_name");
+                        String dosage = c.getString("dosage");
+                        String position = c.getString("position");
+
+                        if(args[1].equals(position)){
+                            if(args[2].equals(pillname)){
+                                checkers = true;
+                            }
+                        }
+
+                    }
+                }
+            }catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after getting all products
+            pDialog.dismiss();
+            // updating UI from Background Thread
+            runOnUiThread(new Runnable() {
+                public void run() {
+
+                }
+            });
+        }
     }
 
     private void showDialog()

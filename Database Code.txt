@@ -37,7 +37,7 @@ CREATE TABLE settings(
 settingID int AUTO_INCREMENT,
 user_ID int NOT NULL,
 numofboxes int NOT NULL,
-boxID int NOT NULL,
+boxID nvarchar(8) NOT NULL,
 alerttime int NOT NULL,
 PRIMARY KEY(settingID),
 Foreign KEY(user_ID) REFERENCES login(user_ID)
